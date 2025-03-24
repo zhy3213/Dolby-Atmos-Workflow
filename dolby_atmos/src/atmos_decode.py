@@ -71,7 +71,7 @@ class Config:
 
 class AtmosDecode:
     def __init__(self, config: Config):
-        # Wine 环境下不需要检查 Windows 路径
+        # No need to check Windows path in Wine environment
         self.config: Config = config
 
     def decode(self, input_file: pathlib.Path, out_file: pathlib.Path | None = None):
@@ -95,13 +95,13 @@ class AtmosDecode:
         out_channel_config_id, channel_names = channel_layout['id'], channel_layout['names']
 
         if self.config.multi_channel:
-            # 生成一个多声道文件
+            # Generate a single multi-channel file
             out_file_path = out_file if out_file is not None else input_file.with_suffix('.wav')
             command = command_fun(input_file, out_file_path, -1, out_channel_config_id, multi_channel=True)
             print(f'Decoding to multi-channel file "{out_file_path}"')
             subprocess.run(command)
         else:
-            # 生成多个单声道文件
+            # Generate multiple mono files
             processes = []
             for channel_id, channel_name in enumerate(channel_names):
                 if self.config.no_numbers:
